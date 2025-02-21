@@ -8,12 +8,35 @@
 4. Kārlis Neimanis 231LDB002
 5. Dāvis Fomičevs 221RDB346
 
+## Soļi izstrādājot darbu📌
+
+1. Jāsaņem spēle no mācībspēka;
+2. Jāizvēlas programmēšanas vide/valoda;
+3. Jāizveido datu struktūra spēles stāvokļu glabāšanai;
+4. Jāprojektē, jārealizē un jātestē spēles algoritmi;
+5. Jāveic eksperimenti ar abiem algoritmiem;
+6. Jāsagatavo atskaite par izstrādāto spēli un tā ir jāiesniedz e-studiju kursā;
+7. jāatbild uz jautājumiem par mākslīgā intelekta rīku izmantošanu spēles izstrādē;
+8. Jāveic komandas dalībnieku savstarpējā vērtēšana;
+9. Jāpiesakās aizstāvēšanas laikam;
+10. Jāaizstāv izstrādātais darbs.
+
+
 
 ## Prasības programmatūrai 🎯
 
 Spēles sākumā cilvēks-spēlētājs norāda spēlē izmantojamas skaitļu virknes garumu, kas var būt diapazonā no **15 līdz 25** skaitļiem.
 
 Spēles programmatūra gadījuma ceļā saģenerē skaitļu virkni atbilstoši uzdotajam garumam, tajā iekļaujot skaitļus **no 1 līdz 3**.
+
+Programmatūrā obligāti ir jānodrošina šādas iespējas lietotājam: 
+
+Izvēlēties, kurš uzsāk spēli: cilvēks vai dators;
+Izvēlēties, kuru algoritmu izmantos dators: Minimaksa algoritmu vai Alfa-beta algoritmu;
+Izpildīt gājienus un redzēt izmaiņas spēles laukumā pēc gājienu (gan cilvēka, gan datora) izpildes;
+Uzsākt spēli atkārtoti pēc kārtējās spēles pabeigšanas.
+
+Programmatūrai ir jānodrošina grafiskā lietotāja saskarne🧩
 
 ---
 
