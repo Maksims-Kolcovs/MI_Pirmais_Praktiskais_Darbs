@@ -1,6 +1,6 @@
 # MI Pirmais Praktiskais Darbs
 
-## Papildu prasības programmatūrai
+## Prasības programmatūrai
 
 Spēles sākumā cilvēks-spēlētājs norāda spēlē izmantojamas skaitļu virknes garumu, kas var būt diapazonā no **15 līdz 25** skaitļiem.
 
