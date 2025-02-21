@@ -1,6 +1,6 @@
-# MI Pirmais Praktiskais Darbs
+# MI Pirmais Praktiskais Darbs 🛠️
 
-## Komandas dalībnieki
+## Komandas dalībnieki 👤
 
 1. Maksims Koļcovs 231RDB363
 2. Staņislava Šuļženko 231RDB330
@@ -9,7 +9,7 @@
 5. Dāvis Fomičevs 221RDB346
 
 
-## Prasības programmatūrai
+## Prasības programmatūrai 🎯
 
 Spēles sākumā cilvēks-spēlētājs norāda spēlē izmantojamas skaitļu virknes garumu, kas var būt diapazonā no **15 līdz 25** skaitļiem.
 
@@ -17,7 +17,7 @@ Spēles programmatūra gadījuma ceļā saģenerē skaitļu virkni atbilstoši u
 
 ---
 
-## Spēles apraksts
+## Spēles apraksts 🎮
 
 1. Spēles sākumā tiek ģenerēta skaitļu virkne.
 2. Katram spēlētājam ir piešķirts **80 punktu**.
