@@ -1,4 +1,8 @@
 # MI Pirmais Praktiskais Darbs 🛠️
+## Atsauces uz visiem lietotiem materiāliem:
+
+Anohina-Naumeca A. *Pirmā praktiskā darba apraksts*. Uzdevuma nostādne. DSP332, 24/25-P. 1. lpp
+
 
 ## Komandas dalībnieki 👤
 
