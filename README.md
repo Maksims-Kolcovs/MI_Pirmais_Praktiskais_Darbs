@@ -2,7 +2,7 @@
 ## Atsauces uz visiem lietotiem materiāliem:
 
 1. Anohina-Naumeca A. *Pirmā praktiskā darba apraksts*. Uzdevuma nostādne. DSP332, 24/25-P. 1. lpp
-2. Pygame Community, *Pygame documentation*, skatīts March 10, 2025. [tiešsaiste]. Available: https://www.pygame.org/docs/
+2. Pygame Community, *Pygame documentation*, skatīts March 10, 2025. [tiešsaiste]. Pieejams: https://www.pygame.org/docs/
 3. Tuychiev, B. *Minimax Algorithm for AI in Python* [tiešsaiste]. Publikācijas datums: Jan 31, 2025. [skatīts 2025.g. 10.martā]. Pieejams: https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
 
 
