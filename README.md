@@ -1,7 +1,8 @@
 # MI Pirmais Praktiskais Darbs 🛠️
 ## Atsauces uz visiem lietotiem materiāliem:
 
-Anohina-Naumeca A. *Pirmā praktiskā darba apraksts*. Uzdevuma nostādne. DSP332, 24/25-P. 1. lpp
+1. Anohina-Naumeca A. *Pirmā praktiskā darba apraksts*. Uzdevuma nostādne. DSP332, 24/25-P. 1. lpp
+2. Pygame Community, *Pygame documentation*, accessed March 10, 2025. [Online]. Available: https://www.pygame.org/docs/
 
 
 ## Komandas dalībnieki 👤
