@@ -55,13 +55,45 @@ def minimax(virkne, dzilums, maksimizacija):
             best_score = min(best_score, score)
         return best_score
 
+
+def alphabeta(virkne, dzilums, alpha, beta, maximizing_player):
+    if len(virkne) == 0:
+        return 0
+    
+    if maximizing_player:
+        best_score = -float('inf')
+        for i in range(len(virkne)):
+            jauna_virkne = virkne[:i] + virkne[i+1:]
+            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False) - virkne[i]
+            best_score = max(best_score, score)
+            alpha = max(alpha, best_score)
+            if beta <= alpha:
+                break
+        return best_score
+    
+    else:
+        best_score = float('inf')
+        for i in range(len(virkne)):
+            jauna_virkne = virkne[:i] + virkne[i+1:]
+            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False) + virkne[i]
+            best_score = min(best_score, score)
+            beta = min(beta, best_score)
+            if beta <= alpha:
+                break
+        return best_score
+
+
+
 # Funkcija, kas aprēķina labāko datora gājienu, izmantojot minimax
-def datora_gajiens(virkne):
+def datora_gajiens(virkne, algoritms):
     best_move = None
     best_score = -float('inf')
     for i in range(len(virkne)):
         new_virkne = virkne[:i] + virkne[i+1:]  # Simulē gājienu
-        score = minimax(new_virkne, 0, False) - virkne[i]  # Aprēķina minimax vērtību
+        if algoritms == "MM":
+            score = minimax(new_virkne, 0, False) - virkne[i]
+        else:
+            score = alphabeta(new_virkne, 0, -float('inf'), float('inf'), False) - virkne[i]
         if score > best_score:  # Atjauno labāko gājienu
             best_score = score
             best_move = i
@@ -77,6 +109,14 @@ while True:
             print("Kļūda: Virknes garumam jābūt starp 15 un 25!")
     except ValueError:
         print("Kļūda: Lūdzu, ievadiet veselu skaitli!")
+
+
+while True:
+    algoritms = input("Ievadiet algoritma veidu (MM vai AB): ").strip().upper()
+    if algoritms == "MM" or "AB":
+        break
+    else:
+        print("Kļūda: Ievadiet MM vai AB!")
 
 # Spēles stāvokļa klase
 class SpelesStavoklis:
@@ -99,12 +139,15 @@ for move in range(len(spele.virkne) + 1):
         break
     else:
         print(f"Gājiens: {move + 1}")
-        iznemtais = spele.virkne.pop()
         
         if (move + 1) % 2 != 0:  # Nepara gājieni - cilvēks
+            iznemtais = int(input("Ievadiet skaitli (1-3): "))
             spele.speletaju_sakuma_punkti[0] -= iznemtais
         else:  # Para gājieni - dators
+            dators = datora_gajiens(spele.virkne, algoritms)
+            iznemtais = spele.virkne.pop(dators)
             spele.speletaju_sakuma_punkti[1] -= iznemtais
+
         
         print("Atlikusī virkne:", spele.virkne)
         print("Spēlētāju punkti:", spele.speletaju_sakuma_punkti)
