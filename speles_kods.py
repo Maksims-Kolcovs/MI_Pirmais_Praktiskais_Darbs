@@ -139,15 +139,24 @@ for move in range(len(spele.virkne) + 1):
         break
     else:
         print(f"Gājiens: {move + 1}")
-        
+        # iznemtais = spele.virkne.pop()
+        print("Atlikusī virkne:", spele.virkne)
+
         if (move + 1) % 2 != 0:  # Nepara gājieni - cilvēks
-            iznemtais = int(input("Ievadiet skaitli (1-3): "))
-            spele.speletaju_sakuma_punkti[0] -= iznemtais
+            while True:
+                try:
+                    iznemtais = int(input("Ievadiet skaitli (1-3): "))
+                    if iznemtais in spele.virkne:
+                        spele.speletaju_sakuma_punkti[0] -= iznemtais
+                        spele.virkne.pop(spele.virkne.index(iznemtais))
+                        break
+                    else:
+                        print("Kļūda: Virknē nav tāda skaitļa!")
+                except ValueError:
+                    print("Kļūda: Ievadiet skaitli no virkni!")
         else:  # Para gājieni - dators
             dators = datora_gajiens(spele.virkne, algoritms)
             iznemtais = spele.virkne.pop(dators)
             spele.speletaju_sakuma_punkti[1] -= iznemtais
-
         
-        print("Atlikusī virkne:", spele.virkne)
         print("Spēlētāju punkti:", spele.speletaju_sakuma_punkti)
