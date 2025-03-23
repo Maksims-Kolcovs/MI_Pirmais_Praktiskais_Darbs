@@ -186,12 +186,13 @@ while running:
                             turn = fonts.render(gajiens, True, melna)
                             screen.blit(turn, (450, 450))
                         if punkti:
-                            points = fonts.render(f"Punkti: {punkti}", True, melna)
+                            points = fonts.render(f"{punkti}", True, melna)
                             screen.blit(points, (450, 500))
                         if cipari:
-                            numbers = fonts.render(f"cipari: {cipari}", True, melna)
+                            numbers = fonts.render(f"{cipari}", True, melna)
                             screen.blit(numbers, (450, 550))
                         pygame.display.flip()
+
 
                         # Datora gajiens
                         if spele.spelebeidzas():
@@ -241,10 +242,10 @@ while running:
         turn = fonts.render(gajiens, True, melna)
         screen.blit(turn, (450, 450))
     if punkti:
-        points = fonts.render(f"Punkti: {punkti}", True, melna)
+        points = fonts.render(f"{punkti}", True, melna)
         screen.blit(points, (450, 500))
     if cipari:
-        numbers = fonts.render(f"cipari: {cipari}", True, melna)
+        numbers = fonts.render(f"{cipari}", True, melna)
         screen.blit(numbers, (450, 550))
 
     pygame.display.flip()
