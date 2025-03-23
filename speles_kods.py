@@ -113,7 +113,7 @@ while True:
 
 while True:
     algoritms = input("Ievadiet algoritma veidu (MM vai AB): ").strip().upper()
-    if algoritms == "MM" or "AB":
+    if algoritms == "MM" or algoritms == "AB":
         break
     else:
         print("Kļūda: Ievadiet MM vai AB!")
