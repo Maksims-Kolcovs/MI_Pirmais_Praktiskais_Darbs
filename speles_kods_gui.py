@@ -152,10 +152,7 @@ while running:
 
                     elif solis == 3:
                         # Cilvēka gajiens
-                        if spele.spelebeidzas():
-                            error_message = "Spēle beigusies"
-                            solis = 4
-                        elif speletaja_gajiens:
+                        if speletaja_gajiens:
                             if ievade.isdigit():
                                 iznemtais = int(ievade)
                                 if iznemtais in spele.virkne:
@@ -205,6 +202,9 @@ while running:
                             spele.speletaju_sakuma_punkti[1] -= iznemtais
                             speletaja_gajiens = True
                             move += 1
+                            if spele.spelebeidzas():
+                                error_message = "Spēle beigusies"
+                                solis = 4
 
                 elif event.key == pygame.K_BACKSPACE:
                     ievade = ievade[:-1]
