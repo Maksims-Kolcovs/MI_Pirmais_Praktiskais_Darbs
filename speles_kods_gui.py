@@ -30,6 +30,8 @@ punkti = ""
 cipari = ""
 upper_ievads = ""
 
+max_dzilums = 2
+
 # minimax algoritms
 # https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
 
@@ -42,7 +44,7 @@ upper_ievads = ""
 # is_maximizing – norāda, vai šobrīd ir maksimizētāja (True) vai minimizētāja (False) gājiens.
 
 def minimax(virkne, dzilums, maksimizacija):
-    if len(virkne) == 0:  # Ja virkne ir tukša, spēle beigusies
+    if len(virkne) == 0 or dzilums >= max_dzilums:  # Ja virkne ir tukša, spēle beigusies
         return 0
 
     if maksimizacija:  # Datora gājiens (maksimizētājs)
@@ -62,7 +64,7 @@ def minimax(virkne, dzilums, maksimizacija):
         return best_score
 
 def alphabeta(virkne, dzilums, alpha, beta, maximizing_player):
-    if len(virkne) == 0:
+    if len(virkne) == 0 or dzilums >= max_dzilums:
         return 0
     
     if maximizing_player:
