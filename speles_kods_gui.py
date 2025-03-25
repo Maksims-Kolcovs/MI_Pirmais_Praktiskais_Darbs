@@ -2,7 +2,6 @@
 import pygame
 import random
 import math
-import sys
 
 ## pygame koda avots https://www.pygame.org/docs/ 
 # Avots teksta lauka izveidošanai un notikumu apstradei - https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
@@ -24,14 +23,12 @@ ievade = ""
 
 running = True
 solis = 1
-skaitlu_virkne = None
-algoritms = None
-iznemtais = None
 message_text = "Ievadiet virknes garumu (15-25):"
 error_message = ""
 gajiens = ""
 punkti = ""
 cipari = ""
+upper_ievads = ""
 
 # minimax algoritms
 # https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
@@ -122,14 +119,14 @@ while running:
         if event.type == pygame.KEYDOWN: # Cilvēks uzpieža pogu no tastaturas
             if event.key == pygame.K_RETURN: # Ievade apstiprinašana (enter)
 
-                if solis == 1: # Virknes garuma izvele
+                if solis == 1: # Virknes garuma izvēle
                     if ievade.isdigit():
                         skaitlu_virkne = int(ievade)
                         if 15 <= skaitlu_virkne <= 25:
                             error_message = ""
-                            solis = 2
                             message_text = "Ievadiet algoritma veidu (MM vai AB):"
                             ievade = ""
+                            solis = 2
                         else:
                             error_message = "Kļūda: Virknes garumam jābūt starp 15 un 25!"
                             ievade = ""
@@ -137,90 +134,130 @@ while running:
                         error_message = "Kļūda: Lūdzu, ievadiet veselu skaitli!"
                         ievade = ""
 
-                elif solis == 2: # Algoritma izvele
+                elif solis == 2: # Algoritma izvēle
                     algoritms = ievade.strip().upper()
                     if algoritms == "MM" or algoritms == "AB":
                         spele = SpelesStavoklis(skaitlu_virkne)
+                        error_message = ""
+                        ievade = ""
+                        message_text = "Ievadiet kurš sāks spēli - cilvēks vai dators (C vai D):"
                         solis = 3
+                    else:
+                        error_message = "Kļūda: Ievadiet MM vai AB!"
+                        ievade = ""
+
+                elif solis == 3: # Izvēle kurš uzsāk spēli
+                    upper_ievads = ievade.strip().upper()
+                    if upper_ievads == "C" or upper_ievads == "D":
                         move = 1
-                        speletaja_gajiens = True
                         error_message = ""
                         ievade = ""
                         message_text = "Ievadiet skaitli (1-3):"
                         gajiens = f"Gājiens: {move}"
                         punkti = f"Tavi punkti: {spele.speletaju_sakuma_punkti[0]} | Datora punkti: {spele.speletaju_sakuma_punkti[1]}"
                         cipari = f"Virkne: {spele.virkne}"
+                        solis = 4
+                        if upper_ievads == "C":
+                            speletaja_gajiens = True
+                        else:
+                            speletaja_gajiens = False
                     else:
-                        error_message = "Kļūda: Ievadiet MM vai AB!"
+                        error_message = "Kļūda: Ievadiet C vai D!"
                         ievade = ""
 
-                elif solis == 3: # Paņemam skaitli no virknes
-                    if speletaja_gajiens: # Cilvēka gajiens
-                        if ievade.isdigit():
-                            iznemtais = int(ievade)
-                            if iznemtais in spele.virkne:
-                                spele.speletaju_sakuma_punkti[0] -= iznemtais
-                                spele.virkne.remove(iznemtais)
-                                speletaja_gajiens = False
-                                move += 1
-                                error_message = ""
-                                ievade = ""
-                                gajiens = f"Gājiens: {move}"
-                                punkti = f"Tavi punkti: {spele.speletaju_sakuma_punkti[0]} | Datora punkti: {spele.speletaju_sakuma_punkti[1]}"
-                                cipari = f"Virkne: {spele.virkne}"
-                                if spele.spelebeidzas():
-                                    gajiens = f"Gājiens: {move - 1}"
-                                    solis = 4
-                                    if (spele.speletaju_sakuma_punkti[0] > spele.speletaju_sakuma_punkti[1]):
-                                        error_message = "Uzvara"
-                                    elif (spele.speletaju_sakuma_punkti[0] < spele.speletaju_sakuma_punkti[1]):
-                                        error_message = "Zaudējums"
-                                    else:
-                                        error_message = "Neizšķirts"
+                # Elif aizvietots ar if, lai gadijuma, kad dators uzsāk spēli, lietotajam nav jāspiž enter
+                if solis == 4: # Paņemam skaitli no virknes
+                    if upper_ievads == "C": # Parbaude izpildas 1 reizi, ja lietotajs uzsāk spēli, lai izvairities no kļūdas paziņojuma
+                        upper_ievads = ""
+                    else:
+                        if speletaja_gajiens: # Cilvēka gajiens
+                            if ievade.isdigit():
+                                iznemtais = int(ievade)
+                                if iznemtais in spele.virkne:
+                                    spele.speletaju_sakuma_punkti[0] -= iznemtais
+                                    spele.virkne.pop(spele.virkne.index(iznemtais))
+                                    speletaja_gajiens = False
+                                    move += 1
+                                    error_message = ""
+                                    ievade = ""
+                                    gajiens = f"Gājiens: {move}"
+                                    punkti = f"Tavi punkti: {spele.speletaju_sakuma_punkti[0]} | Datora punkti: {spele.speletaju_sakuma_punkti[1]}"
+                                    cipari = f"Virkne: {spele.virkne}"
+                                    if spele.spelebeidzas():
+                                        gajiens = f"Gājiens: {move - 1}"
+                                        cipari = ""
+                                        solis = 5
+                                        message_text = "Vai vēlaties spēlēt vēlreiz? (Y vai N):"
+                                        if (spele.speletaju_sakuma_punkti[0] > spele.speletaju_sakuma_punkti[1]):
+                                            error_message = "Uzvara"
+                                        elif (spele.speletaju_sakuma_punkti[0] < spele.speletaju_sakuma_punkti[1]):
+                                            error_message = "Zaudējums"
+                                        else:
+                                            error_message = "Neizšķirts"
+                                else:
+                                    error_message = "Kļūda: Virknē nav tāda skaitļa!"
+                                    ievade = ""
                             else:
-                                error_message = "Kļūda: Virknē nav tāda skaitļa!"
+                                error_message = "Kļūda: Lūdzu, ievadiet veselu skaitli!"
                                 ievade = ""
-                        else:
-                            error_message = "Kļūda: Lūdzu, ievadiet veselu skaitli!"
+
+                        # Atjauno info par spēles stavokli uz ekrana
+                        screen.fill(balta)
+                        pygame.draw.rect(screen, peleks, ievades_lauks)
+                        input = fonts.render(ievade, True, melna)
+                        screen.blit(input, (ievades_lauks.x + 90, ievades_lauks.y + 10))
+                        message = fonts.render(message_text, True, melna)
+                        screen.blit(message, (450, 100))
+                        error = fonts.render(error_message, True, sarkana)
+                        screen.blit(error, (450, 300))
+                        turn = fonts.render(gajiens, True, melna)
+                        screen.blit(turn, (450, 350))
+                        points = fonts.render(punkti, True, melna)
+                        screen.blit(points, (450, 400))
+                        numbers = fonts.render(cipari, True, melna)
+                        screen.blit(numbers, (450, 450))
+                        pygame.display.flip()
+                        clock.tick(60)
+
+                        if not speletaja_gajiens and solis == 4: # Datora gajiens
+                            pygame.time.delay(1500) # Dators gaida 1.5 sekundes
+                            dators = datora_gajiens(spele.virkne, algoritms)
+                            iznemtais = spele.virkne.pop(dators)
+                            spele.speletaju_sakuma_punkti[1] -= iznemtais
+                            speletaja_gajiens = True
+                            move += 1
+                            gajiens = f"Gājiens: {move}"
+                            punkti = f"Tavi punkti: {spele.speletaju_sakuma_punkti[0]} | Datora punkti: {spele.speletaju_sakuma_punkti[1]}"
+                            cipari = f"Virkne: {spele.virkne}"
+                            if spele.spelebeidzas():
+                                gajiens = f"Gājiens: {move - 1}"
+                                cipari = ""
+                                solis = 5
+                                message_text = "Vai vēlaties spēlēt vēlreiz? (Y vai N):"
+                                if (spele.speletaju_sakuma_punkti[0] > spele.speletaju_sakuma_punkti[1]):
+                                    error_message = "Uzvara"
+                                elif (spele.speletaju_sakuma_punkti[0] < spele.speletaju_sakuma_punkti[1]):
+                                    error_message = "Zaudējums"
+                                else:
+                                    error_message = "Neizšķirts"
+
+                elif solis == 5:
+                    upper_ievads = ievade.strip().upper()
+                    if upper_ievads == "Y" or upper_ievads == "N":
+                        if upper_ievads == "Y":
+                            solis = 1
+                            message_text = "Ievadiet virknes garumu (15-25):"
+                            error_message = ""
+                            gajiens = ""
+                            punkti = ""
+                            cipari = ""
                             ievade = ""
-
-                    # Atjauno info par spēles stavokli uz ekrana
-                    screen.fill(balta)
-                    pygame.draw.rect(screen, peleks, ievades_lauks)
-                    ievade_surface = fonts.render(ievade, True, melna)
-                    screen.blit(ievade_surface, (ievades_lauks.x + 90, ievades_lauks.y + 10))
-                    message = fonts.render(message_text, True, melna)
-                    screen.blit(message, (450, 100))
-                    error = fonts.render(error_message, True, sarkana)
-                    screen.blit(error, (450, 300))
-                    turn = fonts.render(gajiens, True, melna)
-                    screen.blit(turn, (450, 350))
-                    points = fonts.render(punkti, True, melna)
-                    screen.blit(points, (450, 400))
-                    numbers = fonts.render(cipari, True, melna)
-                    screen.blit(numbers, (450, 450))
-                    pygame.display.flip()
-                    clock.tick(60)
-
-                    if not speletaja_gajiens and solis == 3: # Datora gajiens
-                        pygame.time.delay(1500) # Dators gaida 1.5 sekundes
-                        dators = datora_gajiens(spele.virkne, algoritms)
-                        iznemtais = spele.virkne.pop(dators)
-                        spele.speletaju_sakuma_punkti[1] -= iznemtais
-                        speletaja_gajiens = True
-                        move += 1
-                        gajiens = f"Gājiens: {move}"
-                        punkti = f"Tavi punkti: {spele.speletaju_sakuma_punkti[0]} | Datora punkti: {spele.speletaju_sakuma_punkti[1]}"
-                        cipari = f"Virkne: {spele.virkne}"
-                        if spele.spelebeidzas():
-                            gajiens = f"Gājiens: {move - 1}"
-                            solis = 4
-                            if (spele.speletaju_sakuma_punkti[0] > spele.speletaju_sakuma_punkti[1]):
-                                error_message = "Uzvara"
-                            elif (spele.speletaju_sakuma_punkti[0] < spele.speletaju_sakuma_punkti[1]):
-                                error_message = "Zaudējums"
-                            else:
-                                error_message = "Neizšķirts"
+                            upper_ievads = ""
+                        else:
+                            running = False
+                    else:
+                        error_message = "Kļūda: Ievadiet Y vai N!"
+                        ievade = ""
 
             elif event.key == pygame.K_BACKSPACE: # Pedeja simbola dzešana
                 ievade = ievade[:-1]
@@ -231,8 +268,8 @@ while running:
 
     # Ievades lauks
     pygame.draw.rect(screen, peleks, ievades_lauks)
-    ievade_surface = fonts.render(ievade, True, melna)
-    screen.blit(ievade_surface, (ievades_lauks.x + 90, ievades_lauks.y + 10))
+    input = fonts.render(ievade, True, melna)
+    screen.blit(input, (ievades_lauks.x + 90, ievades_lauks.y + 10))
 
     # Paziņojumi un info par spēles stavokli
     message = fonts.render(message_text, True, melna)
