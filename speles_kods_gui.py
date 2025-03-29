@@ -3,15 +3,13 @@ import pygame
 import random
 import math
 
-## pygame koda avots https://www.pygame.org/docs/ 
-# Avots teksta lauka izveidošanai un notikumu apstradei - https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
-# Avots pogu izveidošanai un ta uzspiešana ar peli apstrade - https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
-
-
+# Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
+# Pieejams: https://www.pygame.org/docs/
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
-fonts = pygame.font.Font(None, 36)
+running = True
+# atsauksmes beigas.
 
 # Krāsas
 balta = (255, 255, 255)
@@ -24,17 +22,18 @@ win_sk = 0
 lose_sk = 0
 tie_sk = 0
 
-# Ievades lauks
+# chetanjha888, How to create a text input box with Pygame? [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā].
+# Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
+fonts = pygame.font.Font(None, 36)
 ievades_lauks = pygame.Rect(450, 200, 200, 40)
 ievade = ""
-
-# Pogas
 pogas_1_lauks = pygame.Rect(450, 200, 80, 80)
 poga_1 = "1"
 pogas_2_lauks = pygame.Rect(550, 200, 80, 80)
 poga_2 = "2"
 pogas_3_lauks = pygame.Rect(650, 200, 80, 80)
 poga_3 = "3"
+# atsauksmes beigas.
 
 # Paziņojumi
 message_text = "Ievadiet virknes garumu (15-25):"
@@ -45,7 +44,6 @@ cipari = ""
 upper_ievads = ""
 rezultati = f"Uzvaras: {win_sk} | Zaudējumi: {lose_sk} | Neizšķirti: {tie_sk}"
 
-running = True
 d_pirmais_speletajs = False
 solis = 1
 
@@ -165,11 +163,16 @@ class SpelesStavoklis:
         return len(self.virkne) == 0
 
 # Galvenā spēles cilpa
+# Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
+# Pieejams: https://www.pygame.org/docs/
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # Pygame loga aizveršana
             running = False
+# atsauksmes beigas.
 
+        # antrikshmisri, How to create Buttons in a game using PyGame? [tiešsaiste]. Publikācijas datums: May 08 2020. [skatīts 2025.g. 29. martā].
+        # Pieejams: https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
         if d_pirmais_speletajs or event.type == pygame.MOUSEBUTTONDOWN and solis == 4:
             d_pirmais_speletajs = False
             if 450 <= mouse[0] <= 450+80 and 200 <= mouse[1] <= 200+80:
@@ -181,6 +184,8 @@ while running:
             elif 650 <= mouse[0] <= 650+80 and 200 <= mouse[1] <= 200+80:
                 iznemtais = 3
                 poga_izveleta = True
+        # atsauksmes beigas.
+
             if speletaja_gajiens and poga_izveleta:
                 if iznemtais in spele.virkne:
                     spele.speletaju_sakuma_punkti[0] -= iznemtais
@@ -200,6 +205,8 @@ while running:
                     ievade = ""
 
             # Atjauno ekrānu
+            # chetanjha888, How to create a text input box with Pygame? [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā].
+            # Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
             screen.fill(balta)
             pygame.draw.rect(screen, peleks, pogas_1_lauks)
             poga_one = fonts.render(poga_1, True, melna)
@@ -224,9 +231,13 @@ while running:
             screen.blit(rez, (450, 500))
             pygame.display.flip()
             clock.tick(60)
+            # atsauksmes beigas.
 
             if not speletaja_gajiens and solis == 4:
+                # Pygame Community, pygame documentation, skatīts March 22, 2025. [tiešsaiste].
+                # Pieejams: https://www.pygame.org/docs/ref/time.html
                 pygame.time.delay(1500)
+                # atsauksmes beigas.
                 dators = datora_gajiens(spele.virkne, algoritms, spele.speletaju_sakuma_punkti[0], spele.speletaju_sakuma_punkti[1])
                 iznemtais = spele.virkne.pop(dators)
                 spele.speletaju_sakuma_punkti[1] -= iznemtais
@@ -253,8 +264,11 @@ while running:
                     tie_sk += 1
                 rezultati = f"Uzvaras: {win_sk} | Zaudējumi: {lose_sk} | Neizšķirti: {tie_sk}"
 
+        # chetanjha888, How to create a text input box with Pygame? [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā].
+        # Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
         if event.type == pygame.KEYDOWN and solis != 4:
             if event.key == pygame.K_RETURN:
+        # atsauksmes beigas.
                 if solis == 1:
                     if ievade.isdigit():
                         skaitlu_virkne = int(ievade)
@@ -320,20 +334,27 @@ while running:
                         error_message = "Kļūda: Ievadiet Y vai N!"
                         ievade = ""
 
+            # chetanjha888, How to create a text input box with Pygame? [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā].
+            # Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
             elif event.key == pygame.K_BACKSPACE:
                 ievade = ievade[:-1]
             else:
                 ievade += event.unicode
+            # atsauksmes beigas.
 
-    screen.fill(balta)
+    # antrikshmisri, How to create Buttons in a game using PyGame? [tiešsaiste]. Publikācijas datums: May 08 2020. [skatīts 2025.g. 29. martā].
+    # Pieejams: https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
     mouse = pygame.mouse.get_pos()
+    # atsauksmes beigas.
 
+    # chetanjha888, How to create a text input box with Pygame? [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā].
+    # Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
+    screen.fill(balta)
     # Ievades lauks
     if solis != 4:
         pygame.draw.rect(screen, peleks, ievades_lauks)
         input = fonts.render(ievade, True, melna)
         screen.blit(input, (ievades_lauks.x + 90, ievades_lauks.y + 10))
-
     # Pogas
     if solis == 4:
         pygame.draw.rect(screen, peleks, pogas_1_lauks)
@@ -345,7 +366,6 @@ while running:
         pygame.draw.rect(screen, peleks, pogas_3_lauks)
         poga_three = fonts.render(poga_3, True, melna)
         screen.blit(poga_three, (pogas_3_lauks.x + 30, pogas_3_lauks.y + 30))
-
     # Paziņojumi
     message = fonts.render(message_text, True, melna)
     screen.blit(message, (450, 100))
@@ -359,8 +379,11 @@ while running:
     screen.blit(numbers, (450, 450))
     rez = fonts.render(rezultati, True, melna)
     screen.blit(rez, (450, 500))
-
     pygame.display.flip()
     clock.tick(60)
+    # atsauksmes beigas.
 
+# Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
+# Pieejams: https://www.pygame.org/docs/
 pygame.quit()
+# atsauksmes beigas.
