@@ -8,6 +8,7 @@
 5. chetanjha888, *How to create a text input box with Pygame?* [tiešsaiste]. Publikācijas datums: Mar 26 2021. [skatīts 2025.g. 22. martā]. Pieejams: https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
 6. Pygame Community, *pygame documentation*, skatīts March 22, 2025. [tiešsaiste]. Pieejams: https://www.pygame.org/docs/ref/time.html
 7. antrikshmisri, *How to create Buttons in a game using PyGame?* [tiešsaiste]. Publikācijas datums: May 08 2020. [skatīts 2025.g. 29. martā]. Pieejams: https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
+8. Heiristiskās funkcijas inspirētas no DeepSeek algoritmiem un spēļu teorijas pamatiem [tiešaiste]. Pieprasījuma ziņas teksts: vai tu dotajai spēlēi vari piedāvāt kādas varētu būt heirestiskas funkcijas? Pieprasījuma datums: 2025. gada 29. marts 22:20.
 
 ## Komandas dalībnieki 👤
 
