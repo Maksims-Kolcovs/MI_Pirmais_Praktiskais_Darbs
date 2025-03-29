@@ -6,7 +6,7 @@ import math
 ## pygame koda avots https://www.pygame.org/docs/ 
 # Avots teksta lauka izveidošanai un notikumu apstradei - https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
 # Avots pogu izveidošanai un ta uzspiešana ar peli apstrade - https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
-# Heiristiskās funkcijas inspirētas no DeepSeek algoritmiem un spēļu teorijas pamatiem
+
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -76,6 +76,10 @@ def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
     return 0.5 * starpiba + 0.3 * videjais + 0.2 * lielakie
 
 # minimax algoritms
+
+# Tuychiev, B., Minimax Algorithm for AI in Python [tiešsaiste]. Publikācijas datums: Jan 31, 2025. [skatīts 2025.g. 10.martā]. 
+# Pieejams: https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
+
 def minimax(virkne, dzilums, maksimizacija, speletaja_punkti, datora_punkti):
     if len(virkne) == 0 or dzilums >= max_dzilums:
         # Izmantojam heiristisko novērtējumu
@@ -100,6 +104,8 @@ def minimax(virkne, dzilums, maksimizacija, speletaja_punkti, datora_punkti):
             score = minimax(jauna_virkne, dzilums + 1, True, jauni_speletaja_punkti, datora_punkti)
             best_score = min(best_score, score)
         return best_score
+        
+# atsauksmes beigas.
 
 # alphabeta algoritms
 def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti, datora_punkti):
