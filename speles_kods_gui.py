@@ -6,6 +6,7 @@ import math
 ## pygame koda avots https://www.pygame.org/docs/ 
 # Avots teksta lauka izveidošanai un notikumu apstradei - https://www.geeksforgeeks.org/how-to-create-a-text-input-box-with-pygame/
 # Avots pogu izveidošanai un ta uzspiešana ar peli apstrade - https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
+# Heiristiskās funkcijas inspirētas no DeepSeek algoritmiem un spēļu teorijas pamatiem
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -50,26 +51,43 @@ solis = 1
 
 max_dzilums = 2
 
-# minimax algoritms
-# https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
-
-# virkne - Katrā gājienā viens skaitlis tiek izņemts no šī saraksta.
-# Algoritms pārbauda visus iespējamos nākamos gājienus, iterējot cauri sarakstam.
-
-# dzilums - pašreizējais rekursijas dziļums
-# Tas tiek palielināts katrā rekursijas solī (depth + 1).
-
-# is_maximizing – norāda, vai šobrīd ir maksimizētāja (True) vai minimizētāja (False) gājiens.
-
-def minimax(virkne, dzilums, maksimizacija):
-    if len(virkne) == 0 or dzilums >= max_dzilums:  # Ja virkne ir tukša, spēle beigusies
+# Optimizēta heiristiska funkcija (inspirēta no DeepSeek algoritmiem)
+def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
+    """
+    Kombinēta heiristika, kas ņem vērā:
+    1. Punktu starpību starp spēlētājiem
+    2. Vidējo vērtību atlikušajā virknē
+    3. Divus lielākos atlikušos skaitļus
+    """
+    if not virkne:
         return 0
+    
+    # 1. Punktu starpība (50% svars)
+    starpiba = datora_punkti - speletaja_punkti
+    
+    # 2. Vidējā vērtība (30% svars)
+    videjais = sum(virkne) / len(virkne)
+    
+    # 3. Divi lielākie skaitļi (20% svars)
+    sorted_virkne = sorted(virkne, reverse=True)
+    lielakie = sum(sorted_virkne[:2]) if len(sorted_virkne) >= 2 else sum(sorted_virkne)
+    
+    # Kombinētais heiristiskais novērtējums
+    return 0.5 * starpiba + 0.3 * videjais + 0.2 * lielakie
+
+# minimax algoritms
+def minimax(virkne, dzilums, maksimizacija, speletaja_punkti, datora_punkti):
+    if len(virkne) == 0 or dzilums >= max_dzilums:
+        # Izmantojam heiristisko novērtējumu
+        return kombineta_heiristika(virkne, speletaja_punkti, datora_punkti)
 
     if maksimizacija:  # Datora gājiens (maksimizētājs)
         best_score = -float('inf')
         for i in range(len(virkne)):
             jauna_virkne = virkne[:i] + virkne[i+1:]  # Izņem skaitli
-            score = minimax(jauna_virkne, dzilums + 1, False) - virkne[i]  # Atņem skaitli no punktiem
+            # Atjaunina punktus - datoram atņem izņemto skaitli
+            jauni_datora_punkti = datora_punkti - virkne[i]
+            score = minimax(jauna_virkne, dzilums + 1, False, speletaja_punkti, jauni_datora_punkti)
             best_score = max(best_score, score)
         return best_score
         
@@ -77,19 +95,24 @@ def minimax(virkne, dzilums, maksimizacija):
         best_score = float('inf')
         for i in range(len(virkne)):
             jauna_virkne = virkne[:i] + virkne[i+1:]  # Izņem skaitli
-            score = minimax(jauna_virkne, dzilums + 1, True) + virkne[i]  # Pieskaita skaitli punktiem
+            # Atjaunina punktus - cilvēkam atņem izņemto skaitli
+            jauni_speletaja_punkti = speletaja_punkti - virkne[i]
+            score = minimax(jauna_virkne, dzilums + 1, True, jauni_speletaja_punkti, datora_punkti)
             best_score = min(best_score, score)
         return best_score
 
-def alphabeta(virkne, dzilums, alpha, beta, maximizing_player):
+# alphabeta algoritms
+def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti, datora_punkti):
     if len(virkne) == 0 or dzilums >= max_dzilums:
-        return 0
+        # Izmantojam heiristisko novērtējumu
+        return kombineta_heiristika(virkne, speletaja_punkti, datora_punkti)
     
     if maximizing_player:
         best_score = -float('inf')
         for i in range(len(virkne)):
             jauna_virkne = virkne[:i] + virkne[i+1:]
-            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False) - virkne[i]
+            jauni_datora_punkti = datora_punkti - virkne[i]
+            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False, speletaja_punkti, jauni_datora_punkti)
             best_score = max(best_score, score)
             alpha = max(alpha, best_score)
             if beta <= alpha:
@@ -100,23 +123,27 @@ def alphabeta(virkne, dzilums, alpha, beta, maximizing_player):
         best_score = float('inf')
         for i in range(len(virkne)):
             jauna_virkne = virkne[:i] + virkne[i+1:]
-            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False) + virkne[i]
+            jauni_speletaja_punkti = speletaja_punkti - virkne[i]
+            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, True, jauni_speletaja_punkti, datora_punkti)
             best_score = min(best_score, score)
             beta = min(beta, best_score)
             if beta <= alpha:
                 break
         return best_score
 
-# Funkcija, kas aprēķina labāko datora gājienu, izmantojot minimax
-def datora_gajiens(virkne, algoritms):
+# Funkcija, kas aprēķina labāko datora gājienu
+def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
     best_move = None
     best_score = -float('inf')
     for i in range(len(virkne)):
         new_virkne = virkne[:i] + virkne[i+1:]  # Simulē gājienu
+        jauni_datora_punkti = datora_punkti - virkne[i]
+        
         if algoritms == "MM":
-            score = minimax(new_virkne, 0, False) - virkne[i]
+            score = minimax(new_virkne, 0, False, speletaja_punkti, jauni_datora_punkti)
         else:
-            score = alphabeta(new_virkne, 0, -float('inf'), float('inf'), False) - virkne[i]
+            score = alphabeta(new_virkne, 0, -float('inf'), float('inf'), False, speletaja_punkti, jauni_datora_punkti)
+            
         if score > best_score:  # Atjauno labāko gājienu
             best_score = score
             best_move = i
@@ -131,13 +158,14 @@ class SpelesStavoklis:
     def spelebeidzas(self):  # Funkcija pārbauda, vai spēle ir beigusies
         return len(self.virkne) == 0
 
+# Galvenā spēles cilpa
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # Pygame loga aizveršana
             running = False
 
-        if d_pirmais_speletajs or event.type == pygame.MOUSEBUTTONDOWN and solis == 4: # Cilvēks uzpieža pogu no peles
-            d_pirmais_speletajs = False # Nepieciešams, lai dators izdara pirmo gajienu bez papildu darbībam no lietotaja
+        if d_pirmais_speletajs or event.type == pygame.MOUSEBUTTONDOWN and solis == 4:
+            d_pirmais_speletajs = False
             if 450 <= mouse[0] <= 450+80 and 200 <= mouse[1] <= 200+80:
                 iznemtais = 1
                 poga_izveleta = True
@@ -147,7 +175,7 @@ while running:
             elif 650 <= mouse[0] <= 650+80 and 200 <= mouse[1] <= 200+80:
                 iznemtais = 3
                 poga_izveleta = True
-            if speletaja_gajiens and poga_izveleta: # Cilvēka gajiens
+            if speletaja_gajiens and poga_izveleta:
                 if iznemtais in spele.virkne:
                     spele.speletaju_sakuma_punkti[0] -= iznemtais
                     spele.virkne.pop(spele.virkne.index(iznemtais))
@@ -165,7 +193,7 @@ while running:
                     error_message = "Kļūda: Virknē nav tāda skaitļa!"
                     ievade = ""
 
-            # Atjauno info par spēles stavokli uz ekrana
+            # Atjauno ekrānu
             screen.fill(balta)
             pygame.draw.rect(screen, peleks, pogas_1_lauks)
             poga_one = fonts.render(poga_1, True, melna)
@@ -191,9 +219,9 @@ while running:
             pygame.display.flip()
             clock.tick(60)
 
-            if not speletaja_gajiens and solis == 4: # Datora gajiens
-                pygame.time.delay(1500) # Dators gaida 1.5 sekundes
-                dators = datora_gajiens(spele.virkne, algoritms)
+            if not speletaja_gajiens and solis == 4:
+                pygame.time.delay(1500)
+                dators = datora_gajiens(spele.virkne, algoritms, spele.speletaju_sakuma_punkti[0], spele.speletaju_sakuma_punkti[1])
                 iznemtais = spele.virkne.pop(dators)
                 spele.speletaju_sakuma_punkti[1] -= iznemtais
                 speletaja_gajiens = True
@@ -219,10 +247,9 @@ while running:
                     tie_sk += 1
                 rezultati = f"Uzvaras: {win_sk} | Zaudējumi: {lose_sk} | Neizšķirti: {tie_sk}"
 
-        if event.type == pygame.KEYDOWN and solis != 4: # Cilvēks uzpieža pogu no tastaturas
-            if event.key == pygame.K_RETURN: # Ievade apstiprinašana (enter)
-
-                if solis == 1: # Virknes garuma izvēle
+        if event.type == pygame.KEYDOWN and solis != 4:
+            if event.key == pygame.K_RETURN:
+                if solis == 1:
                     if ievade.isdigit():
                         skaitlu_virkne = int(ievade)
                         if 15 <= skaitlu_virkne <= 25:
@@ -237,7 +264,7 @@ while running:
                         error_message = "Kļūda: Lūdzu, ievadiet veselu skaitli!"
                         ievade = ""
 
-                elif solis == 2: # Algoritma izvēle
+                elif solis == 2:
                     algoritms = ievade.strip().upper()
                     if algoritms == "MM" or algoritms == "AB":
                         spele = SpelesStavoklis(skaitlu_virkne)
@@ -249,7 +276,7 @@ while running:
                         error_message = "Kļūda: Ievadiet MM vai AB!"
                         ievade = ""
 
-                elif solis == 3: # Izvēle kurš uzsāk spēli
+                elif solis == 3:
                     upper_ievads = ievade.strip().upper()
                     if upper_ievads == "C" or upper_ievads == "D":
                         move = 1
@@ -269,7 +296,7 @@ while running:
                         error_message = "Kļūda: Ievadiet C vai D!"
                         ievade = ""
 
-                elif solis == 5: # Izvele meģināt vēlreiz vai pabeigt spēli
+                elif solis == 5:
                     upper_ievads = ievade.strip().upper()
                     if upper_ievads == "Y" or upper_ievads == "N":
                         if upper_ievads == "Y":
@@ -287,7 +314,7 @@ while running:
                         error_message = "Kļūda: Ievadiet Y vai N!"
                         ievade = ""
 
-            elif event.key == pygame.K_BACKSPACE: # Pedeja simbola dzešana
+            elif event.key == pygame.K_BACKSPACE:
                 ievade = ievade[:-1]
             else:
                 ievade += event.unicode
@@ -313,7 +340,7 @@ while running:
         poga_three = fonts.render(poga_3, True, melna)
         screen.blit(poga_three, (pogas_3_lauks.x + 30, pogas_3_lauks.y + 30))
 
-    # Paziņojumi un info par spēles stavokli
+    # Paziņojumi
     message = fonts.render(message_text, True, melna)
     screen.blit(message, (450, 100))
     error = fonts.render(error_message, True, sarkana)
@@ -326,7 +353,6 @@ while running:
     screen.blit(numbers, (450, 450))
     rez = fonts.render(rezultati, True, melna)
     screen.blit(rez, (450, 500))
-
 
     pygame.display.flip()
     clock.tick(60)
