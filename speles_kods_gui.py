@@ -106,6 +106,10 @@ def minimax(virkne, dzilums, maksimizacija, speletaja_punkti, datora_punkti):
 # atsauksmes beigas.
 
 # alphabeta algoritms
+
+#Yawar, M., Alpha Beta pruning [tiešsaiste]. Publikācijas datums: Jun 24 2024. [skatīts 2025.g. 21.martā]. 
+# Pieejams: https://www.naukri.com/code360/library/alpha-beta-pruning-in-artificial-intelligence
+
 def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti, datora_punkti):
     if len(virkne) == 0 or dzilums >= max_dzilums:
         # Izmantojam heiristisko novērtējumu
@@ -134,6 +138,8 @@ def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti,
             if beta <= alpha:
                 break
         return best_score
+
+# atsauksmes beigas.
 
 # Funkcija, kas aprēķina labāko datora gājienu
 def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
