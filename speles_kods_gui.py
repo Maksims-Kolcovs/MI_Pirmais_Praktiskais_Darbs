@@ -1,7 +1,7 @@
 # Izmantotās bibliotēkas
 import pygame
 import random
-import math
+import time
 
 # Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
 # Pieejams: https://www.pygame.org/docs/
@@ -145,6 +145,7 @@ def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti,
 def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
     best_move = None
     best_score = -float('inf')
+    start_time = time.time()
     for i in range(len(virkne)):
         new_virkne = virkne[:i] + virkne[i+1:]  # Simulē gājienu
         jauni_datora_punkti = datora_punkti - virkne[i]
@@ -157,6 +158,10 @@ def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
         if score > best_score:  # Atjauno labāko gājienu
             best_score = score
             best_move = i
+
+    end_time = time.time()
+    algoritma_izpildes_laiks = end_time - start_time
+    print("Algoritma izpildes laiks ir: " + str(algoritma_izpildes_laiks))
     return best_move
 
 # Spēles stāvokļa klase
@@ -167,6 +172,7 @@ class SpelesStavoklis:
     
     def spelebeidzas(self):  # Funkcija pārbauda, vai spēle ir beigusies
         return len(self.virkne) == 0
+
 
 # Galvenā spēles cilpa
 # Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
