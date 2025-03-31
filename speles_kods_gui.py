@@ -48,6 +48,7 @@ d_pirmais_speletajs = False
 solis = 1
 
 max_dzilums = 2
+visited_nodes = 0
 
 # Optimizēta heiristiska funkcija (inspirēta no DeepSeek algoritmiem)
 def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
@@ -73,96 +74,148 @@ def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
     # Kombinētais heiristiskais novērtējums
     return 0.5 * starpiba + 0.3 * videjais + 0.2 * lielakie
 
+
+
+
+# Koka konstruēšana
+
+class MoveNode:
+    def __init__(self, virkne, speletaja_punkti, datora_punkti, move=None, parent=None):
+        self.virkne = virkne.copy()
+        self.speletaja_punkti = speletaja_punkti
+        self.datora_punkti = datora_punkti
+        self.move = move  
+        self.parent = parent
+        self.children = []
+        self.score = None
+    
+    def add_child(self, child_node):
+        self.children.append(child_node)
+
 # minimax algoritms
 
 # Tuychiev, B., Minimax Algorithm for AI in Python [tiešsaiste]. Publikācijas datums: Jan 31, 2025. [skatīts 2025.g. 10.martā]. 
 # Pieejams: https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
 
-def minimax(virkne, dzilums, maksimizacija, speletaja_punkti, datora_punkti):
-    if len(virkne) == 0 or dzilums >= max_dzilums:
-        # Izmantojam heiristisko novērtējumu
-        return kombineta_heiristika(virkne, speletaja_punkti, datora_punkti)
+def minimax(node, dzilums, maksimizacija, max_dzilums):
+    global visited_nodes
+    visited_nodes += 1
 
-    if maksimizacija:  # Datora gājiens (maksimizētājs)
+    if len(node.virkne) == 0 or dzilums >= max_dzilums:
+        node.score = kombineta_heiristika(node.virkne, node.speletaja_punkti, node.datora_punkti)
+        return node.score
+
+    if maksimizacija:
         best_score = -float('inf')
-        for i in range(len(virkne)):
-            jauna_virkne = virkne[:i] + virkne[i+1:]  # Izņem skaitli
-            # Atjaunina punktus - datoram atņem izņemto skaitli
-            jauni_datora_punkti = datora_punkti - virkne[i]
-            score = minimax(jauna_virkne, dzilums + 1, False, speletaja_punkti, jauni_datora_punkti)
+        for i in range(len(node.virkne)):
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauni_datora_punkti = node.datora_punkti - node.virkne[i]
+            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)
+            node.add_child(child)
+            score = minimax(child, dzilums + 1, False, max_dzilums)
             best_score = max(best_score, score)
+        node.score = best_score
         return best_score
-        
-    else:  # Cilvēka gājiens (minimizētājs)
+
+    else:
         best_score = float('inf')
-        for i in range(len(virkne)):
-            jauna_virkne = virkne[:i] + virkne[i+1:]  # Izņem skaitli
-            # Atjaunina punktus - cilvēkam atņem izņemto skaitli
-            jauni_speletaja_punkti = speletaja_punkti - virkne[i]
-            score = minimax(jauna_virkne, dzilums + 1, True, jauni_speletaja_punkti, datora_punkti)
+        for i in range(len(node.virkne)):
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauni_speletaja_punkti = node.speletaja_punkti - node.virkne[i]
+            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)
+            node.add_child(child)
+            score = minimax(child, dzilums + 1, True, max_dzilums)
             best_score = min(best_score, score)
+        node.score = best_score
         return best_score
-        
+
+
 # atsauksmes beigas.
+
 
 # alphabeta algoritms
 
 #Yawar, M., Alpha Beta pruning [tiešsaiste]. Publikācijas datums: Jun 24 2024. [skatīts 2025.g. 21.martā]. 
 # Pieejams: https://www.naukri.com/code360/library/alpha-beta-pruning-in-artificial-intelligence
 
-def alphabeta(virkne, dzilums, alpha, beta, maximizing_player, speletaja_punkti, datora_punkti):
-    if len(virkne) == 0 or dzilums >= max_dzilums:
-        # Izmantojam heiristisko novērtējumu
-        return kombineta_heiristika(virkne, speletaja_punkti, datora_punkti)
+def alphabeta(node, dzilums, alpha, beta, maximizing_player, max_dzilums):
+    global visited_nodes
+    visited_nodes += 1
+
+    if len(node.virkne) == 0 or dzilums >= max_dzilums:
+        node.score = kombineta_heiristika(node.virkne, node.speletaja_punkti, node.datora_punkti)
+        return node.score
     
     if maximizing_player:
         best_score = -float('inf')
-        for i in range(len(virkne)):
-            jauna_virkne = virkne[:i] + virkne[i+1:]
-            jauni_datora_punkti = datora_punkti - virkne[i]
-            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, False, speletaja_punkti, jauni_datora_punkti)
+        for i in range(len(node.virkne)):
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauni_datora_punkti = node.datora_punkti - node.virkne[i]
+            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)
+            node.add_child(child)
+            score = alphabeta(child, dzilums + 1, alpha, beta, False, max_dzilums)
             best_score = max(best_score, score)
             alpha = max(alpha, best_score)
             if beta <= alpha:
                 break
+        node.score = best_score
         return best_score
     
     else:
         best_score = float('inf')
-        for i in range(len(virkne)):
-            jauna_virkne = virkne[:i] + virkne[i+1:]
-            jauni_speletaja_punkti = speletaja_punkti - virkne[i]
-            score = alphabeta(jauna_virkne, dzilums + 1, alpha, beta, True, jauni_speletaja_punkti, datora_punkti)
+        for i in range(len(node.virkne)):
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauni_speletaja_punkti = node.speletaja_punkti - node.virkne[i]
+            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)
+            node.add_child(child)
+            score = alphabeta(child, dzilums + 1, alpha, beta, True, max_dzilums)
             best_score = min(best_score, score)
             beta = min(beta, best_score)
             if beta <= alpha:
                 break
+        node.score = best_score
         return best_score
 
+    
 # atsauksmes beigas.
+
+
+
+gajienu_laiki = []  # Saglabā katra gājiena izpildes laikus
+kopējais_virsotņu_skaits = 0  # Saglabā kopējo apmeklēto virsotņu skaitu
 
 # Funkcija, kas aprēķina labāko datora gājienu
 def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
+    global visited_nodes, kopējais_virsotņu_skaits, gajienu_laiki
+    visited_nodes = 0  
+    start_time = time.time()
+    root = MoveNode(virkne, speletaja_punkti, datora_punkti)
     best_move = None
     best_score = -float('inf')
-    start_time = time.time()
+    
     for i in range(len(virkne)):
-        new_virkne = virkne[:i] + virkne[i+1:]  # Simulē gājienu
+        jauna_virkne = virkne[:i] + virkne[i+1:]
         jauni_datora_punkti = datora_punkti - virkne[i]
+        child = MoveNode(jauna_virkne, speletaja_punkti, jauni_datora_punkti, virkne[i], root)
+        root.add_child(child)
         
         if algoritms == "MM":
-            score = minimax(new_virkne, 0, False, speletaja_punkti, jauni_datora_punkti)
+            score = minimax(child, 0, False, max_dzilums)
         else:
-            score = alphabeta(new_virkne, 0, -float('inf'), float('inf'), False, speletaja_punkti, jauni_datora_punkti)
+            score = alphabeta(child, 0, -float('inf'), float('inf'), False, max_dzilums)
             
-        if score > best_score:  # Atjauno labāko gājienu
+        if score > best_score:
             best_score = score
             best_move = i
-
+    
     end_time = time.time()
     algoritma_izpildes_laiks = end_time - start_time
+    gajienu_laiki.append(algoritma_izpildes_laiks)  # Pievieno šī gājiena laiku
+    kopējais_virsotņu_skaits += visited_nodes  # Pieskaita virsotnes kopējam skaitam
+
     print("Algoritma izpildes laiks ir: " + str(algoritma_izpildes_laiks))
-    return best_move
+    print(f"Dators apmeklēja {visited_nodes} virsotnes šajā gājienā.")
+    return best_move, root
 
 # Spēles stāvokļa klase
 class SpelesStavoklis:
@@ -172,7 +225,6 @@ class SpelesStavoklis:
     
     def spelebeidzas(self):  # Funkcija pārbauda, vai spēle ir beigusies
         return len(self.virkne) == 0
-
 
 # Galvenā spēles cilpa
 # Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
@@ -250,7 +302,7 @@ while running:
                 # Pieejams: https://www.pygame.org/docs/ref/time.html
                 pygame.time.delay(1500)
                 # atsauksmes beigas.
-                dators = datora_gajiens(spele.virkne, algoritms, spele.speletaju_sakuma_punkti[0], spele.speletaju_sakuma_punkti[1])
+                dators, move_tree = datora_gajiens(spele.virkne, algoritms, spele.speletaju_sakuma_punkti[0], spele.speletaju_sakuma_punkti[1])
                 iznemtais = spele.virkne.pop(dators)
                 spele.speletaju_sakuma_punkti[1] -= iznemtais
                 speletaja_gajiens = True
@@ -340,6 +392,8 @@ while running:
                             cipari = ""
                             ievade = ""
                             upper_ievads = ""
+                            gajienu_laiki = []
+                            kopējais_virsotņu_skaits = 0
                         else:
                             running = False
                     else:
@@ -394,6 +448,15 @@ while running:
     pygame.display.flip()
     clock.tick(60)
     # atsauksmes beigas.
+
+# Aprēķina un parāda veiktspējas datus pēc spēles
+if gajienu_laiki:
+    videjais_laiks = sum(gajienu_laiki) / len(gajienu_laiki)
+    print("\n=== ALGORITMA VEIKTSPĒJAS DATI PĒDĒJAI SPĒLEI ===")
+    print(f"Kopējais gājienu skaits: {len(gajienu_laiki)}")
+    print(f"Kopējais apmeklēto virsotņu skaits: {kopējais_virsotņu_skaits}")
+    print(f"Vidējais izpildes laiks: {videjais_laiks:.6f} sekundes")
+    print(f"Visi izpildes laiki: {[f'{t:.4f}s' for t in gajienu_laiki]}")
 
 # Pygame Community, Pygame documentation, skatīts March 10, 2025. [tiešsaiste].
 # Pieejams: https://www.pygame.org/docs/
