@@ -74,58 +74,58 @@ def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
     # Kombinētais heiristiskais novērtējums
     return 0.5 * starpiba + 0.3 * videjais + 0.2 * lielakie
 
-
-
-
 # Koka konstruēšana
 
 class MoveNode:
     def __init__(self, virkne, speletaja_punkti, datora_punkti, move=None, parent=None):
-        self.virkne = virkne.copy()
-        self.speletaja_punkti = speletaja_punkti
-        self.datora_punkti = datora_punkti
-        self.move = move  
-        self.parent = parent
-        self.children = []
-        self.score = None
+        self.virkne = virkne.copy()                 # virkne, kurā tiek glabāti skaitļi (iespējamie gājieni), kurus vajag apskatīt
+        self.speletaja_punkti = speletaja_punkti    # tēkošie spēlētaja punkti
+        self.datora_punkti = datora_punkti          # tēkošie datora punkti
+        self.move = move                            # Kurš skaitlis tiek izvēlēts
+        self.parent = parent                        # Vecāks mezgls kokā
+        self.children = []                          # Iespējamie nākamie gājieni
+        self.score = None                           # Heirestiskais novērtējums
     
     def add_child(self, child_node):
         self.children.append(child_node)
 
-# minimax algoritms
+# Minimax algoritms
 
 # Tuychiev, B., Minimax Algorithm for AI in Python [tiešsaiste]. Publikācijas datums: Jan 31, 2025. [skatīts 2025.g. 10.martā]. 
 # Pieejams: https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python
 
 def minimax(node, dzilums, maksimizacija, max_dzilums):
     global visited_nodes
-    visited_nodes += 1
+    visited_nodes += 1  # Skaitā katru apmeklēto mezglu
 
+    # Pārbaude, vai saraksts jau ir tukšs vai ir maksimālais dziļums
     if len(node.virkne) == 0 or dzilums >= max_dzilums:
         node.score = kombineta_heiristika(node.virkne, node.speletaja_punkti, node.datora_punkti)
         return node.score
 
-    if maksimizacija:
-        best_score = -float('inf')
+    if maksimizacija:                                               # Maksimizācijas posms (datora gājiens)
+        best_score = -float('inf')                                  # Sākumā labākais rezultāts ir negatīvā bezgalība, jo ir maksimizācija
         for i in range(len(node.virkne)):
-            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]      # Jauns iespējamais spēles stāvoklis
             jauni_datora_punkti = node.datora_punkti - node.virkne[i]
-            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)
+            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)    # Bērna mezgls ar jauno stāvokli
             node.add_child(child)
-            score = minimax(child, dzilums + 1, False, max_dzilums)
-            best_score = max(best_score, score)
+            # Minimax vērtība
+            score = minimax(child, dzilums + 1, False, max_dzilums) 
+            best_score = max(best_score, score)                     # Saglabā labāko rezultātu 
         node.score = best_score
         return best_score
 
-    else:
-        best_score = float('inf')
+    else:                                                           # Minimizācijas posms (spēlētāja gājiens)
+        best_score = float('inf')                                   # Sākumā labākais rezultāts ir pozitīvā bezgalība, jo ir minimizācija
         for i in range(len(node.virkne)):
-            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]      # Jauns iespējamais spēles stāvoklis
             jauni_speletaja_punkti = node.speletaja_punkti - node.virkne[i]
-            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)
+            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)    # Bērna mezgls ar jauno stāvokli
             node.add_child(child)
+            # Minimax vērtība
             score = minimax(child, dzilums + 1, True, max_dzilums)
-            best_score = min(best_score, score)
+            best_score = min(best_score, score)                     # Saglabā labāko rezultātu 
         node.score = best_score
         return best_score
 
@@ -140,58 +140,60 @@ def minimax(node, dzilums, maksimizacija, max_dzilums):
 
 def alphabeta(node, dzilums, alpha, beta, maximizing_player, max_dzilums):
     global visited_nodes
-    visited_nodes += 1
+    visited_nodes += 1                                          # Skaitā katru apmeklēto mezglu
 
+    # Pārbaude, vai saraksts jau ir tukšs vai ir maksimālais dziļums
     if len(node.virkne) == 0 or dzilums >= max_dzilums:
         node.score = kombineta_heiristika(node.virkne, node.speletaja_punkti, node.datora_punkti)
         return node.score
     
-    if maximizing_player:
-        best_score = -float('inf')
+    if maximizing_player:                                       # Maksimizācijas posms (datora gājiens)
+        best_score = -float('inf')                              # Sākumā labākais rezultāts ir negatīvā bezgalība, jo ir maksimizācija
         for i in range(len(node.virkne)):
-            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]  # Jauns iespējamais spēles stāvoklis
             jauni_datora_punkti = node.datora_punkti - node.virkne[i]
-            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)
+            child = MoveNode(jauna_virkne, node.speletaja_punkti, jauni_datora_punkti, node.virkne[i], node)    # Bērna mezgls ar jauno stāvokli
             node.add_child(child)
+            # Alfa-Beta vērtība
             score = alphabeta(child, dzilums + 1, alpha, beta, False, max_dzilums)
-            best_score = max(best_score, score)
-            alpha = max(alpha, best_score)
-            if beta <= alpha:
-                break
+            best_score = max(best_score, score)                 # Saglabā labāko rezultātu 
+            alpha = max(alpha, best_score)                      # Dodam alfai lielāko novērtējumu
+            if beta <= alpha:                                   # Pārbaude, ja beta jau ir sliktākā neka alfa
+                break                                           # Loka nogriešana (beta)
         node.score = best_score
         return best_score
     
-    else:
-        best_score = float('inf')
+    else:                                                       # Minimizācijas posms (spēlētāja gājiens)
+        best_score = float('inf')                               # Sākumā labākais rezultāts ir pozitīvā bezgalība, jo ir minimizācija
         for i in range(len(node.virkne)):
-            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]
+            jauna_virkne = node.virkne[:i] + node.virkne[i+1:]  # Jauns iespējamais spēles stāvoklis
             jauni_speletaja_punkti = node.speletaja_punkti - node.virkne[i]
-            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)
+            child = MoveNode(jauna_virkne, jauni_speletaja_punkti, node.datora_punkti, node.virkne[i], node)    # Bērna mezgls ar jauno stāvokli
             node.add_child(child)
+            # Alfa-Beta vērtība
             score = alphabeta(child, dzilums + 1, alpha, beta, True, max_dzilums)
-            best_score = min(best_score, score)
-            beta = min(beta, best_score)
-            if beta <= alpha:
-                break
+            best_score = min(best_score, score)                 # Saglabā labāko rezultātu 
+            beta = min(beta, best_score)                        # Dodam betai mazāko novērtējumu
+            if beta <= alpha:                                   # Pārbaude, ja beta jau ir sliktākā neka alfa
+                break                                           # Loka nogriešana (alfa)
         node.score = best_score
         return best_score
 
     
 # atsauksmes beigas.
 
-
-
-gajienu_laiki = []  # Saglabā katra gājiena izpildes laikus
-kopējais_virsotņu_skaits = 0  # Saglabā kopējo apmeklēto virsotņu skaitu
+gajienu_laiki = []                # Saglabā katra gājiena izpildes laikus
+kopējais_virsotņu_skaits = 0      # Saglabā kopējo apmeklēto virsotņu skaitu
 
 # Funkcija, kas aprēķina labāko datora gājienu
 def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
-    global visited_nodes, kopējais_virsotņu_skaits, gajienu_laiki
-    visited_nodes = 0  
-    start_time = time.time()
+    global visited_nodes
+    visited_nodes = 0                                   # Katru reizi skaitam mezglus no 0
+    start_time = time.time()                            # Laika sākums, lai uzzināt algoritma ilgumu
+    
     root = MoveNode(virkne, speletaja_punkti, datora_punkti)
     best_move = None
-    best_score = -float('inf')
+    best_score = -float('inf')                          # No sākuma labākais gājiens ir negatīvā bezgalība
     
     for i in range(len(virkne)):
         jauna_virkne = virkne[:i] + virkne[i+1:]
@@ -199,19 +201,19 @@ def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
         child = MoveNode(jauna_virkne, speletaja_punkti, jauni_datora_punkti, virkne[i], root)
         root.add_child(child)
         
-        if algoritms == "MM":
+        if algoritms == "MM":                           # Ja spēlētajs izvēlēja "MM", tad dators izmanto Minimax algoritmu
             score = minimax(child, 0, False, max_dzilums)
-        else:
+        else:                                           # Ja spēlētajs izvēlēja "AB", tad dators izmanto Alfa-Beta algoritmu
             score = alphabeta(child, 0, -float('inf'), float('inf'), False, max_dzilums)
             
-        if score > best_score:
+        if score > best_score:                          # Labaka rezultāta pieškiršana
             best_score = score
             best_move = i
     
-    end_time = time.time()
-    algoritma_izpildes_laiks = end_time - start_time
-    gajienu_laiki.append(algoritma_izpildes_laiks)  # Pievieno šī gājiena laiku
-    kopējais_virsotņu_skaits += visited_nodes  # Pieskaita virsotnes kopējam skaitam
+    end_time = time.time()                              # Laika beigumd
+    algoritma_izpildes_laiks = end_time - start_time    # Skaita, cik laika aizņema algoritms 
+    gajienu_laiki.append(algoritma_izpildes_laiks)      # Pievieno šī gājiena laiku
+    kopējais_virsotņu_skaits += visited_nodes           # Pieskaita virsotnes kopējam skaitam
 
     print("Algoritma izpildes laiks ir: " + str(algoritma_izpildes_laiks))
     print(f"Dators apmeklēja {visited_nodes} virsotnes šajā gājienā.")
@@ -220,10 +222,10 @@ def datora_gajiens(virkne, algoritms, speletaja_punkti, datora_punkti):
 # Spēles stāvokļa klase
 class SpelesStavoklis:
     def __init__(self, skaitlu_virkne):
-        self.virkne = [random.randint(1, 3) for _ in range(skaitlu_virkne)]  # Ģenerē skaitļus no 1 līdz 3
-        self.speletaju_sakuma_punkti = [80, 80]  # Abi spēlētāji sāk ar 80 punktiem
+        self.virkne = [random.randint(1, 3) for _ in range(skaitlu_virkne)]     # Ģenerē skaitļus no 1 līdz 3
+        self.speletaju_sakuma_punkti = [80, 80]                                 # Abi spēlētāji sāk ar 80 punktiem
     
-    def spelebeidzas(self):  # Funkcija pārbauda, vai spēle ir beigusies
+    def spelebeidzas(self):                                                     # Funkcija pārbauda, vai spēle ir beigusies
         return len(self.virkne) == 0
 
 # Galvenā spēles cilpa
