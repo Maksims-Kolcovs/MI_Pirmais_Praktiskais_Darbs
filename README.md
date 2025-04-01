@@ -9,6 +9,8 @@
 6. Pygame Community, *pygame documentation*, skatīts March 22, 2025. [tiešsaiste]. Pieejams: https://www.pygame.org/docs/ref/time.html
 7. antrikshmisri, *How to create Buttons in a game using PyGame?* [tiešsaiste]. Publikācijas datums: May 08 2020. [skatīts 2025.g. 29. martā]. Pieejams: https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
 8. Heiristiskās funkcijas inspirētas no DeepSeek algoritmiem un spēļu teorijas pamatiem [tiešaiste]. Pieprasījuma ziņas teksts: vai tu dotajai spēlēi vari piedāvāt kādas varētu būt heirestiskas funkcijas? Pieprasījuma datums: 2025. gada 29. marts 22:20.
+9. Enozeren, *Building a Decision Tree From Scratch with Python* [tiešsaiste]. Publikācijas datums: Oct 13 2023. [skatīts 2025.g. 29.martā]. Pieejams: https://medium.com/@enozeren/building-a-decision-tree-from-scratch-324b9a5ed836
+10. mm6643, *How to create a simple non-binary tree from a list of given nodes in Python* [tiešsaiste]. Publikācijas datums: Aug 18 2020. [skatīts 2025.g. 29.martā]. Pieejams: https://stackoverflow.com/questions/63465454/how-to-create-a-simple-non-binary-tree-from-a-list-of-given-nodes-in-python
 
 ## Komandas dalībnieki 👤
 
