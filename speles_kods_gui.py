@@ -61,18 +61,18 @@ def kombineta_heiristika(virkne, speletaja_punkti, datora_punkti):
     if not virkne:
         return 0
     
-    # 1. Punktu starpība (50% svars)
+    # 1. Punktu starpība (60% svars)
     starpiba = datora_punkti - speletaja_punkti
     
     # 2. Vidējā vērtība (30% svars)
     videjais = sum(virkne) / len(virkne)
     
-    # 3. Divi lielākie skaitļi (20% svars)
+    # 3. Divi lielākie skaitļi (10% svars)
     sorted_virkne = sorted(virkne, reverse=True)
     lielakie = sum(sorted_virkne[:2]) if len(sorted_virkne) >= 2 else sum(sorted_virkne)
     
     # Kombinētais heiristiskais novērtējums
-    return 0.5 * starpiba + 0.3 * videjais + 0.2 * lielakie
+    return 0.6 * starpiba + 0.3 * videjais + 0.1 * lielakie
 
 # Koka konstruēšana
 
